@@ -1,0 +1,14 @@
+<html>
+<head>
+this is a test
+<script>
+</script>
+</head>
+<body>
+<?php
+$sid=$_GET["sid"];
+echo "hello";
+?>
+hello
+</body>
+</html>

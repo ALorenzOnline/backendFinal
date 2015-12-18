@@ -1,0 +1,101 @@
+<?php
+try{
+/*
+$apikey1="238E8D6B70BF7499EE36312EF39F91AA";
+
+
+$gameData="http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=238E8D6B70BF7499EE36312EF39F91AA&appid=400";
+
+$jsonO=file_get_contents($gameData);
+$jsondecoded=json_decode($jsonO,true);
+if($jsondecoded==null){
+echo'no data retrieved';
+}
+echo"hello";
+print_r($jsondecoded);
+//echo $jsondecoded['availabeGameStats'];
+/*
+for($jasondecoded['game'] as $elem){
+	echo "hello";
+}
+*/
+
+/*
+@This Function will scrape tags from steams website, by using the app id to locate the game.
+@then  putting the source code into a text file. From there it searches for a particular link
+@ in their code that contains tags, and sorts it into an array.
+@in the end it will use mongo and store the data using the app as the primary id
+@and then stores the first six genre types.
+
+*/
+$appid =0; 
+while($appid <10000){
+	$url = "http://store.steampowered.com/app/$appid/";
+	$output = file_get_contents($url);
+	$file = 'tempStorage.txt';
+	file_put_contents($file, $output, FILE_APPEND);
+
+
+	$contents=file_get_contents($file);
+
+	$i=0;
+	while($i<6)
+	{
+		switch ($i){
+			case 0:
+				$genre='Puzzle';
+				$i++;
+				break;
+			case 1:
+				$genre = 'Action';
+				$i++;
+			break;
+			case 2:
+				$genre ='Adventure';
+				$i++;		
+			break;
+			case 3:
+				$genre = 'Dating Sim';
+				$i++;		
+			break;
+			case 4:
+				$genre = 'Stealth';
+				$i++;		
+			break;
+			case 5:
+				$genre ='Strategy';
+				$i++;		
+			break;
+			case 6:
+				$genre ='Survival-Horror';
+				$i++;
+			break;				
+	}
+
+		$pattern = preg_quote("http://store.steampowered.com/tag/en/$genre/?snr=1_5_9__409",'/');
+		$pattern = "/^.*$pattern.*\$/m";
+		if(preg_match_all($pattern, $contents, $matches))
+		{
+   			echo "Found matches:\n";
+   			echo $genre;
+		}
+		else{
+   			echo "No matches found";
+		}
+	}
+
+	file_put_contents($file,"");
+	echo "complete";
+	//echo $matches[0];
+}//End While Loop;
+
+
+}catch(ErrorException $e){
+	echo $e->getMessage();
+}
+
+
+
+
+
+?>
